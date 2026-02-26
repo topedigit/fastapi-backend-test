@@ -1,20 +1,12 @@
-from dotenv import load_dotenv
-load_dotenv()
-
-
 from fastapi import FastAPI
-from sqlalchemy import create_engine, text
-import os
+from sqlalchemy import text
+from .database import engine
 
 app = FastAPI()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-engine = create_engine(DATABASE_URL)
-
 @app.get("/")
 def home():
-    return {"message": "Backend is working with DB!"}
+    return {"message": "Backend is working!"}
 
 @app.get("/db-test")
 def db_test():
