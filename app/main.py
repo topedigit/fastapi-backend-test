@@ -24,3 +24,11 @@ Base.metadata.create_all(bind=engine)
 from .routes import users
 
 app.include_router(users.router)
+
+@app.get("/tables")
+def check_tables():
+    with engine.connect() as connection:
+        result = connection.execute(text(
+            "SELECT tablename FROM pg_tables WHERE schemaname='public';"
+        ))
+        return {"tables": [row[0] for row in result]}
