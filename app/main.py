@@ -13,3 +13,14 @@ def db_test():
     with engine.connect() as connection:
         result = connection.execute(text("SELECT 1"))
         return {"database_response": str(result.scalar())}
+
+
+from .database import Base, engine
+from . import models
+
+Base.metadata.create_all(bind=engine)
+
+
+from .routes import users
+
+app.include_router(users.router)
