@@ -4,6 +4,8 @@ class UserCreate(BaseModel):
     name: str
     email: str
 
+
+        
 class UserResponse(BaseModel):
     id: int
     name: str

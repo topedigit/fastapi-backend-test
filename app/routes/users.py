@@ -23,3 +23,31 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 @router.get("/", response_model=list[schemas.UserResponse])
 def list_users(db: Session = Depends(get_db)):
     return db.query(models.User).all()
+
+@router.put("/{user_id}", response_model=schemas.UserResponse)
+def update_user(user_id: int, user: schemas.UserCreate, db: Session = Depends(get_db)):
+    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+
+    if not db_user:
+        return {"error": "User not found"}
+
+    db_user.name = user.name
+    db_user.email = user.email
+
+    db.commit()
+    db.refresh(db_user)
+
+    return db_user
+
+
+@router.delete("/{user_id}")
+def delete_user(user_id: int, db: Session = Depends(get_db)):
+    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+
+    if not db_user:
+        return {"error": "User not found"}
+
+    db.delete(db_user)
+    db.commit()
+
+    return {"message": "User deleted successfully"}
